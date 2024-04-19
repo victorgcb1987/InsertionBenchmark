@@ -68,16 +68,16 @@ def main():
         out_fpath = arguments["out_dir"] / out_dirname
         if not out_fpath.exists():
             out_fpath.mkdir(parents=True)
-    with open(arguments["input_sequence"]) as input_fhand:
-        with open(arguments["input_positions"]) as starting_fhand:
-            sequences = get_sequences(input_fhand, starting_fhand, freq1, freq2, 
-                                      arguments["insertion_length"], out_fpath)
-    with open(arguments["destiny"]) as destiny_fhand:
-        insertions = insert_into_nucleus(destiny_fhand, sequences, out_fpath)
-    with open(out_fpath / "summary.txt", "w") as out_fhand:
-        for line in insertions:
-            write_ = "{}\t{}\t{}\n".format(str(line[0]), str(line[1].replace(">", "")), str(line[2]))
-            out_fhand.write(write_)
+        with open(arguments["input_sequence"]) as input_fhand:
+            with open(arguments["input_positions"]) as starting_fhand:
+                sequences = get_sequences(input_fhand, starting_fhand, freq1, freq2, 
+                                          arguments["insertion_length"], out_fpath)
+        with open(arguments["destiny"]) as destiny_fhand:
+            insertions = insert_into_nucleus(destiny_fhand, sequences, out_fpath)
+        with open(out_fpath / "summary.txt", "w") as out_fhand:
+            for line in insertions:
+                write_ = "{}\t{}\t{}\n".format(str(line[0]), str(line[1].replace(">", "")), str(line[2]))
+                out_fhand.write(write_)
 
 if __name__ == "__main__":
     main()
