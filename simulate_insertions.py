@@ -1,6 +1,7 @@
 #!/usr/bin/env python
 
 import argparse
+import sys
 
 from pathlib import Path
 
@@ -11,10 +12,17 @@ IDENTITIES = [(0.41, 0.5), (0.51, 0.60),
               (0.61, 0.7), (0.71, 0.8),
               (0.81, 0.9), (0.91, 1)]
 
+
+class MyParser(argparse.ArgumentParser): 
+   def error(self, message):
+      sys.stderr.write('error: %s\n' % message)
+      self.print_help()
+      sys.exit(2)
+
 #Generating program options
 def parse_arguments():
     desc = "Insert sequences with random mutations into a genome"
-    parser = argparse.ArgumentParser(description=desc)
+    parser = MyParser(description=desc)
     
     
     help_insertion_source = "(Required) FASTA insertion source."
