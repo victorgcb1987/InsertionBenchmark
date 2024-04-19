@@ -70,7 +70,10 @@ def get_arguments():
 def main():
     arguments = get_arguments()
     for identity_range in IDENTITIES:
-        root_dir = arguments["input_dir"] / "{}_{}".format(str(identity_range[0], str(identity_range[1])))
+        freq1 = identity_range[0]
+        freq2 = identity_range[1]
+        out_dirname = "{}_{}".format(str(freq1), str(freq2))
+        root_dir = arguments["input_dir"] / out_dirname        
         os.chdir(str(root_dir))
         run_pbsim(strategy=arguments["strategy"], depth=arguments["sequencing_depth"], 
                    min_length=arguments["min_length"], max_length=arguments["max_length"],
