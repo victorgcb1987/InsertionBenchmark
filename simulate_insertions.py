@@ -13,16 +13,10 @@ IDENTITIES = [(0.41, 0.5), (0.51, 0.60),
               (0.81, 0.9), (0.91, 1)]
 
 
-class MyParser(argparse.ArgumentParser): 
-   def error(self, message):
-      sys.stderr.write('error: %s\n' % message)
-      self.print_help()
-      sys.exit(2)
-
 #Generating program options
 def parse_arguments():
     desc = "Insert sequences with random mutations into a genome"
-    parser = MyParser(description=desc)
+    parser = argparse.ArgumentParser(description=desc)
     
     
     help_insertion_source = "(Required) FASTA insertion source."
@@ -44,13 +38,13 @@ def parse_arguments():
     help_out_dir = "(Required) Out dir"
     parser.add_argument("--out_dir", "-o", type=str,
                         help=help_out_dir)
-
-    return parser
+    parser.usage = parser.format_help()
+    return parser.parse_args()
 
 
 #Parse and return values given to options when running this program
 def get_arguments():
-    parser = parse_arguments().parse_args()
+    parser = parse_arguments()
     input_sequence = parser.input_sequence
     input_positions = parser.input_positions
     destiny = parser.destiny
