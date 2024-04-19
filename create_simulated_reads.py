@@ -61,7 +61,7 @@ def get_arguments():
     min_length = parser.min_length
     max_length = parser.max_length
     method = parser.method
-    model_file = parser.model_file    
+    model_file = Path(parser.model_file)   
     return {"input_dir": input_dir, "strategy": strategy,
             "sequencing_depth": sequencing_depth, "min_length": min_length, 
             "max_length": max_length, "method": method, "model_file": model_file}
