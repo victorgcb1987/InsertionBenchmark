@@ -38,7 +38,9 @@ def parse_arguments():
     help_out_dir = "(Required) Out dir"
     parser.add_argument("--out_dir", "-o", type=str,
                         help=help_out_dir)
-    parser.usage = parser.format_help()
+    if len(sys.argv)==1:
+        parser.print_help()
+        exit()
     return parser.parse_args()
 
 
