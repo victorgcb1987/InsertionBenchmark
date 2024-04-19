@@ -6,7 +6,7 @@ import sys
 
 from pathlib import Path
 
-from src.pbsim import run_spbsim
+from src.pbsim import run_pbsim
 
 
 IDENTITIES = [(0.41, 0.5), (0.51, 0.60), 
@@ -72,7 +72,7 @@ def main():
     for identity_range in IDENTITIES:
         root_dir = arguments["input_dir"] / "{}_{}".format(str(identity_range[0], str(identity_range[1])))
         os.chdir(str(root_dir))
-        run_spbsim(strategy=arguments["strategy"], depth=arguments["sequencing_depth"], 
+        run_pbsim(strategy=arguments["strategy"], depth=arguments["sequencing_depth"], 
                    min_length=arguments["min_length"], max_length=arguments["max_length"],
                    method=arguments["method"], method_model=arguments["model_file"], reference=str(root_dir / "Nuclear_with_insertions.fasta"))
         
