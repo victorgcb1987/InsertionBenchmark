@@ -37,12 +37,12 @@ def parse_arguments():
     parser.add_argument("--out_dir", "-o", type=str,
                         help=help_out_dir)
 
-    return parser.parse_args()
+    return parser
 
 
 #Parse and return values given to options when running this program
 def get_arguments():
-    parser = parse_arguments()
+    parser = parse_arguments().parse_args()
     input_sequence = parser.input_sequence
     input_positions = parser.input_positions
     destiny = parser.destiny
