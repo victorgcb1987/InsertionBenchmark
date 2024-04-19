@@ -77,7 +77,7 @@ def main():
         os.chdir(str(root_dir))
         run_pbsim(strategy=arguments["strategy"], depth=arguments["sequencing_depth"], 
                    min_length=arguments["min_length"], max_length=arguments["max_length"],
-                   method=arguments["method"], method_model=arguments["model_file"], reference=str(root_dir / "Nuclear_with_insertions.fasta"))
+                   method=arguments["method"], method_model=arguments["model_file"], reference=root_dir / "Nuclear_with_insertions.fasta")
         
 
 if __name__ == "__main__":
