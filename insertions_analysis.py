@@ -96,7 +96,7 @@ def get_reads_in_insertions(minimap2_df, insertions_df):
         reads = minimap2_df.loc[~((row.organelleEnd <= minimap2_df["organelleStart"]) | (minimap2_df["organelleEnd"] <= row.organelleStart))]
         #reads = minimap2_df.loc[(minimap2_df["organelleStart"] >= row.organelleStart) & (minimap2_df["organelleEnd"] <= row.organelleEnd)]
         print(row)
-        print(reads["organelleStart"].low(), reads["organelleEnd"].max())
+        print(reads["organelleStart"].min(), reads["organelleEnd"].max())
         print(reads["readName"])
 
 
