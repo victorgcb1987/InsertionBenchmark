@@ -31,8 +31,7 @@ def parse_arguments():
                         help=help_ref_genome)
     
     help_skip_mapping = "(Optional) Skip mapping step"
-    parser.add_argument("--skip_mapping", "-s", type=bool,
-                        action="store_true",
+    parser.add_argument("--skip_mapping", "-s", action="store_true",
                         help=help_skip_mapping)
     
     if len(sys.argv)==1:
