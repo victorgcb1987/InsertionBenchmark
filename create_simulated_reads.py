@@ -73,11 +73,12 @@ def main():
         freq1 = identity_range[0]
         freq2 = identity_range[1]
         out_dirname = "{}_{}".format(str(freq1), str(freq2))
-        root_dir = arguments["input_dir"] / out_dirname        
+        root_dir = arguments["input_dir"] / out_dirname     
         os.chdir(str(root_dir))
+        reference = root_dir / "Nuclear_with_insertions.fasta"
         run_pbsim(strategy=arguments["strategy"], depth=arguments["sequencing_depth"], 
                    min_length=arguments["min_length"], max_length=arguments["max_length"],
-                   method=arguments["method"], method_model=arguments["model_file"], reference=root_dir / "Nuclear_with_insertions.fasta")
+                   method=arguments["method"], method_model=arguments["model_file"], reference=reference.resolve())
         
 
 if __name__ == "__main__":
