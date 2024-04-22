@@ -21,5 +21,5 @@ def run_pbsim(strategy="wgs", depth=100, min_length=1000, max_length=30000,
     if reference.exists():
         cmd.append("--genome {}".format(str(reference)))
     else:
-        raise RuntimeError(("Sequence file not found:".format(str(reference))))
+        raise RuntimeError(("Sequence file not found: {}".format(str(reference))))
     run(" ".join(cmd), shell=True, capture_output=True)
