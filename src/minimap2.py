@@ -1,10 +1,10 @@
 from subprocess import run
 
 def run_minimap2(genome, sequences, paf_fpath):
-    cmd = ["minimap2", "-cx map-pb", "-k 11", "--secondary no", "-t", "40", genome,  
-           sequences, ">", paf_fpath]
+    cmd = ["minimap2", "-cx map-pb", "-k 11", "--secondary no", "-t", "40", str(genome),  
+           str(sequences), ">", str(paf_fpath)]
     print(" ".join(cmd))
-    run(" ".join(cmd), shell=True, capture_output=True)
+    run(" ".join(cmd), shell=True)
 
 def get_minimap_hits_on_insertions(insertions_source, minimap_hits):
     mapped_insertions = {insertion_name: [] for insertion_name in insertions_source}

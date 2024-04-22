@@ -19,7 +19,7 @@ IDENTITIES = [(0.41, 0.5), (0.51, 0.60),
 
 #Generating program options
 def parse_arguments():
-    desc = "Create in silico Long Reads from a fasta files"
+    desc = "Analyze mapping results"
     parser = argparse.ArgumentParser(description=desc)
     
     help_input_dir = "(Required) input dir"
