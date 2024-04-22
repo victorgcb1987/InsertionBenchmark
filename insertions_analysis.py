@@ -96,7 +96,7 @@ def get_reads_in_insertions(minimap2_df, insertions_df):
         reads = minimap2_df.loc[~((row.organelleEnd <= minimap2_df["organelleStart"]) | (minimap2_df["organelleEnd"] <= row.organelleStart))]
         #reads = minimap2_df.loc[(minimap2_df["organelleStart"] >= row.organelleStart) & (minimap2_df["organelleEnd"] <= row.organelleEnd)]
         print(row)
-        print(reads["organelleStart"].median(), reads["organelleEnd"].median())
+        print(reads["organelleStart"].low(), reads["organelleEnd"].max())
         print(reads["readName"])
 
 
@@ -115,8 +115,7 @@ def main():
         insertions_df = load_insertions_source_as_dataframe(summary)
         minimap2_df = load_minimap2_hits_as_dataframe(mapping_output)
         sequences_in_nucleus_df = load_read_positions_from_maf_into_dataframe(in_fpath / "sd_0001.maf")
-        print(sequences_in_nucleus_df)
-    #get_reads_in_insertions(minimap2_df, insertions_df)
+        get_reads_in_insertions(minimap2_df, insertions_df)
     # overlaps = classify_minimap_hits(insertions_source, mapping_output)
     # with open(out_path / "results.txt", "w") as results_fhand:
     #     results_fhand.write("Insertion\tNumOverlaps\n")
