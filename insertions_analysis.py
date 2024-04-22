@@ -30,6 +30,11 @@ def parse_arguments():
     parser.add_argument("--organelle_ref", "-r", type=str,
                         help=help_ref_genome)
     
+    help_skip_mapping = "(Optional) Skip mapping step"
+    parser.add_argument("--skip_mapping", "-s", type=bool,
+                        action="store_true",
+                        help=help_skip_mapping)
+    
     if len(sys.argv)==1:
         parser.print_help()
         exit()
@@ -41,8 +46,10 @@ def get_arguments():
     parser = parse_arguments()
     input_dir = Path(parser.input_dir)
     ref_genome = Path(parser.organelle_ref)
+    skip_mapping = parser.skip_mapping
     return {"input_dir": input_dir, 
-            "ref_genome": ref_genome}
+            "ref_genome": ref_genome,
+            "skip_mapping": skip_mapping}
 
 
 def classify_minimap_hits(insertions_source, minimap_hits):
@@ -104,11 +111,11 @@ def main():
         summary = in_fpath / "summary.txt"
         sequences_fpath = str(in_fpath / "sd_0001.fastq")
         mapping_output = str(in_fpath / "reads_mapped_against_organelle.paf")
-        run_minimap2(genome_fpath, sequences_fpath, mapping_output)
+        if not arguments["skip_mapping"]:
+            run_minimap2(genome_fpath, sequences_fpath, mapping_output)
         insertions_df = load_insertions_source_as_dataframe(summary)
-        print("************Insertions")
         minimap2_df = load_minimap2_hits_as_dataframe(mapping_output)
-        sequences_in_nucleus_df = load_read_positions_from_maf_into_dataframe(out_path / "sd_0001.maf")
+        sequences_in_nucleus_df = load_read_positions_from_maf_into_dataframe(in_fpath / "sd_0001.maf")
         print(sequences_in_nucleus_df)
     #get_reads_in_insertions(minimap2_df, insertions_df)
     # overlaps = classify_minimap_hits(insertions_source, mapping_output)
