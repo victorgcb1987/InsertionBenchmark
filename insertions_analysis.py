@@ -1,8 +1,46 @@
-import pandas as pd
+import argparse
+import sys
 
 from pathlib import Path
-from subprocess import run
-from sys import argv
+
+
+from src.dataframes_load import (load_insertions_source_as_dataframe, 
+                                 load_minimap2_hits_as_dataframe, 
+                                 load_read_positions_from_maf_into_dataframe)
+from src.minimap2 import run_minimap2
+
+
+IDENTITIES = [(0.41, 0.5), (0.51, 0.60), 
+              (0.61, 0.7), (0.71, 0.8),
+              (0.81, 0.9), (0.91, 1)]
+
+
+#Generating program options
+def parse_arguments():
+    desc = "Create in silico Long Reads from a fasta files"
+    parser = argparse.ArgumentParser(description=desc)
+    
+    help_input_dir = "(Required) input dir"
+    parser.add_argument("--input_dir", "-i", type=str,
+                        help=help_input_dir)
+    
+    help_ref_genome = "(Required) Fasta file from the organelle"
+    parser.add_argument("--organelle_ref", "-r", type=str,
+                        help=help_ref_genome)
+    
+    if len(sys.argv)==1:
+        parser.print_help()
+        exit()
+    return parser.parse_args()
+
+
+#Parse and return values given to options when running this program
+def get_arguments():
+    parser = parse_arguments()
+    input_dir = Path(parser.input_dir)
+    ref_genome = Path(parser.organelle_ref)
+    return {"input_dir": input_dir, 
+            "ref_genome": ref_genome}
 
 
 def classify_minimap_hits(insertions_source, minimap_hits):
@@ -34,9 +72,6 @@ def classify_minimap_hits(insertions_source, minimap_hits):
     return mapped_insertions
 
 
-
-
-
 def get_insertions_source(summary):
     insertions_source = {}
     with open(summary) as summary_fhand:
@@ -58,15 +93,23 @@ def get_reads_in_insertions(minimap2_df, insertions_df):
 
 
 def main():
-    out_path = Path(argv[1])
-    summary = out_path / "summary.txt"
-    genome_fpath = str(Path(argv[2]))
-    sequences_fpath = str(out_path / "sd_0001.fastq")
-    mapping_output = str(out_path / "reads_mapped_against_organelle.paf")
-    insertions_df = load_insertions_source_as_dataframe(summary)
-    #run_minimap2(genome_fpath, sequences_fpath, mapping_output)
-    minimap2_df = load_minimap2_hits_as_dataframe(mapping_output)
-    sequences_in_nucleus_df = load_read_positions_from_maf_into_dataframe(out_path / "sd_0001.maf")
+    arguments = get_arguments()
+    genome_fpath = arguments["ref_genome"]
+    root_dir = arguments["input_dir"]
+    for identity in IDENTITIES:
+        in_fname = "{}_{}".format(identity[0], identity[1])
+        in_fpath = root_dir / in_fname
+        summary = in_fpath / "summary.txt"
+        sequences_fpath = str(in_fpath / "sd_0001.fastq")
+        mapping_output = str(in_fpath / "reads_mapped_against_organelle.paf")
+        run_minimap2(genome_fpath, sequences_fpath, mapping_output)
+        insertions_df = load_insertions_source_as_dataframe(summary)
+        print("************Insertions")
+        print(insertions_df)
+        minimap2_df = load_minimap2_hits_as_dataframe(mapping_output)
+        print("************Minimap")
+        print(minimap2_df)
+    #sequences_in_nucleus_df = load_read_positions_from_maf_into_dataframe(out_path / "sd_0001.maf")
     print(insertions_df)
     #get_reads_in_insertions(minimap2_df, insertions_df)
     # overlaps = classify_minimap_hits(insertions_source, mapping_output)
