@@ -5,7 +5,7 @@ def run_pbsim(strategy="wgs", depth=100, min_length=1000, max_length=30000,
               method="errhmm", method_model=None, reference=None):
     cmd = ["pbsim"]
     if strategy in ["wgs"]:
-        cmd.append("--strategy".format(strategy))
+        cmd.append("--strategy {}".format(strategy))
     else:
         raise ValueError("{} is not a valid strategy")
     cmd.append("--depth {}".format(str(depth)))
