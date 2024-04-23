@@ -117,6 +117,12 @@ def get_reads_from_insertions(insertions_df, sequences_in_nucleus_df):
     return pd.DataFrame.from_dict(dict_to_dataframe).sort_values("pointOfInsertionStart")
     
 
+def merge_minimap2_and_reference_nuclear(ref_df, minimap2_df):
+    merge = ref_df.merge(minimap2_df, how="outer")
+    print(merge)
+    pass
+
+
 def main():
     arguments = get_arguments()
     genome_fpath = arguments["ref_genome"]
@@ -131,12 +137,9 @@ def main():
             run_minimap2(genome_fpath, sequences_fpath, mapping_output)
         insertions_df = load_insertions_source_as_dataframe(summary)
         minimap2_df = load_minimap2_hits_as_dataframe(mapping_output)
-        print("minimap2")
-        print(minimap2_df)
         sequences_in_nucleus_df = load_read_positions_from_maf_into_dataframe(in_fpath / "sd_0001.maf")
-        df = get_reads_from_insertions(insertions_df, sequences_in_nucleus_df)
-        print("Sequences")
-        print(df)
+        ref_df = get_reads_from_insertions(insertions_df, sequences_in_nucleus_df)
+        merged_df = merge_minimap2_and_reference_nuclear(ref_df, minimap2_df)
 
     # overlaps = classify_minimap_hits(insertions_source, mapping_output)
     # with open(out_path / "results.txt", "w") as results_fhand:
