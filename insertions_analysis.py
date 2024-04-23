@@ -95,10 +95,19 @@ def get_reads_in_insertions(minimap2_df, insertions_df):
     for row in insertions_df.itertuples():
         reads = minimap2_df.loc[~((row.organelleEnd <= minimap2_df["organelleStart"]) | (minimap2_df["organelleEnd"] <= row.organelleStart))]
         #reads = minimap2_df.loc[(minimap2_df["organelleStart"] >= row.organelleStart) & (minimap2_df["organelleEnd"] <= row.organelleEnd)]
+
+def get_reads_from_insertions(insertions_df, sequences_in_nucleus_df):
+    dict_to_dataframe = {"insertion": []}
+    for row in insertions_df.itertuples():
+        reads = sequences_in_nucleus_df.loc[~((row.nuclearEnd <= sequences_in_nucleus_df["nuclearStart"]) | (sequences_in_nucleus_df["nuclearEnd"] <= row.nuclearStart))]
         print(row)
         print(reads)
-        print(reads["readName"])
-
+    #mirar cada read in sequences in nucles
+    #si la posicion solapa con insertions:
+    #####Tabla
+    #readName NuclearInsertionStart, NuclearInsertionEnd, OrganelleStart, OrganelleEnd
+    pass
+    
 
 def main():
     arguments = get_arguments()
@@ -116,6 +125,7 @@ def main():
         minimap2_df = load_minimap2_hits_as_dataframe(mapping_output)
         sequences_in_nucleus_df = load_read_positions_from_maf_into_dataframe(in_fpath / "sd_0001.maf")
         get_reads_in_insertions(minimap2_df, insertions_df)
+
     # overlaps = classify_minimap_hits(insertions_source, mapping_output)
     # with open(out_path / "results.txt", "w") as results_fhand:
     #     results_fhand.write("Insertion\tNumOverlaps\n")
