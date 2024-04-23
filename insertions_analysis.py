@@ -100,8 +100,8 @@ def get_reads_in_insertions(minimap2_df, insertions_df):
 def get_reads_from_insertions(insertions_df, sequences_in_nucleus_df):
     dict_to_dataframe = {"readName": [],  "organelleStart": [],
                          "organelleEnd": [], "strand": [],
-                         "mappingStart": [], "mappingEnd": [],
-                         "nuclearStart": [], "nuclearEnd": []}
+                         "refMappingStart": [], "refMappingEnd": [],
+                         "pointOfInsertionStart": [], "pointOfInsertionEnd": []}
     for row in insertions_df.itertuples():
         reads = sequences_in_nucleus_df.loc[~((row.nuclearEnd <= sequences_in_nucleus_df["nuclearStart"]) | (sequences_in_nucleus_df["nuclearEnd"] <= row.nuclearStart))]
         if not reads.empty:
@@ -110,21 +110,12 @@ def get_reads_from_insertions(insertions_df, sequences_in_nucleus_df):
                 dict_to_dataframe["readName"].append(read.readName)
                 dict_to_dataframe["organelleStart"].append(row.organelleStart)
                 dict_to_dataframe["organelleEnd"].append(row.organelleEnd)
-                dict_to_dataframe["nuclearStart"].append(row.nuclearStart)
-                dict_to_dataframe["nuclearEnd"].append(row.nuclearEnd)
-                dict_to_dataframe["mappingStart"].append(read.nuclearStart)
-                dict_to_dataframe["mappingEnd"].append(read.nuclearEnd)
+                dict_to_dataframe["pointOfInsertionStart"].append(row.nuclearStart)
+                dict_to_dataframe["pointOfInsertionEnd"].append(row.nuclearEnd)
+                dict_to_dataframe["refMappingStart"].append(read.nuclearStart)
+                dict_to_dataframe["refMappingEnd"].append(read.nuclearEnd)
                 dict_to_dataframe["strand"].append(read.strand)
-    return pd.DataFrame.from_dict(dict_to_dataframe).sort_values("nuclearStart")
-
-
-
-    #mirar cada read in sequences in nucles
-    #si la posicion solapa con insertions:
-    #####Tabla
-    #readName NuclearInsertionStart, NuclearInsertionEnd, OrganelleStart, OrganelleEnd
-    pass
-
+    return pd.DataFrame.from_dict(dict_to_dataframe).sort_values("pointOfInsertionStart")
     
 
 def main():
@@ -141,8 +132,11 @@ def main():
             run_minimap2(genome_fpath, sequences_fpath, mapping_output)
         insertions_df = load_insertions_source_as_dataframe(summary)
         minimap2_df = load_minimap2_hits_as_dataframe(mapping_output)
+        print("minimap2")
+        print(minimap2_df)
         sequences_in_nucleus_df = load_read_positions_from_maf_into_dataframe(in_fpath / "sd_0001.maf")
         df = get_reads_from_insertions(insertions_df, sequences_in_nucleus_df)
+        print("Sequences")
         print(df)
 
     # overlaps = classify_minimap_hits(insertions_source, mapping_output)
