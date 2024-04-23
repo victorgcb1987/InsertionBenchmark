@@ -119,7 +119,7 @@ def get_reads_from_insertions(insertions_df, sequences_in_nucleus_df):
 
 def merge_minimap2_and_reference_nuclear(ref_df, minimap2_df):
     merge = ref_df.merge(minimap2_df, how="outer")
-    merge.to_csv("check.tsv", index=False)
+    merge.to_csv("check.tsv", sep="\t", index=False, na_rep='NULL')
     pass
 
 
@@ -140,7 +140,6 @@ def main():
         sequences_in_nucleus_df = load_read_positions_from_maf_into_dataframe(in_fpath / "sd_0001.maf")
         ref_df = get_reads_from_insertions(insertions_df, sequences_in_nucleus_df)
         merged_df = merge_minimap2_and_reference_nuclear(ref_df, minimap2_df)
-
     # overlaps = classify_minimap_hits(insertions_source, mapping_output)
     # with open(out_path / "results.txt", "w") as results_fhand:
     #     results_fhand.write("Insertion\tNumOverlaps\n")
