@@ -1,6 +1,7 @@
 #!/usr/bin/env python
 
 import argparse
+import pandas as pd
 import sys
 
 from pathlib import Path
@@ -97,16 +98,31 @@ def get_reads_in_insertions(minimap2_df, insertions_df):
         #reads = minimap2_df.loc[(minimap2_df["organelleStart"] >= row.organelleStart) & (minimap2_df["organelleEnd"] <= row.organelleEnd)]
 
 def get_reads_from_insertions(insertions_df, sequences_in_nucleus_df):
-    dict_to_dataframe = {"insertion": []}
+    dict_to_dataframe = {"readName": [], "insertionStart": [],
+                         "insertionEnd": [], "organellerStart": [],
+                         "organelleEnd": [], "strand": []}
     for row in insertions_df.itertuples():
         reads = sequences_in_nucleus_df.loc[~((row.nuclearEnd <= sequences_in_nucleus_df["nuclearStart"]) | (sequences_in_nucleus_df["nuclearEnd"] <= row.nuclearStart))]
-        print(row)
-        print(reads)
+        if not reads.empty:
+            for read in reads:
+                dict_to_dataframe["readName"].append(read.readName)
+                dict_to_dataframe["organelleStart"].append(row.organelleStart)
+                dict_to_dataframe["organelleEnd"].append(row.organelleEnd)
+                dict_to_dataframe["nuclearStart"].append(row.nuclearStart)
+                dict_to_dataframe["nuclearEnd"].append(row.nuclearEnd)
+                dict_to_dataframe["mappingStart"].append(read.nuclearStart)
+                dict_to_dataframe["mappingEnd"].append(read.nuclearEnd)
+                dict_to_dataframe["strand"].append(read.strand)
+    return pd.DataFrame.from_dict(dict_to_dataframe).sort_values("nuclearStart")
+
+
+
     #mirar cada read in sequences in nucles
     #si la posicion solapa con insertions:
     #####Tabla
     #readName NuclearInsertionStart, NuclearInsertionEnd, OrganelleStart, OrganelleEnd
     pass
+
     
 
 def main():
@@ -124,7 +140,8 @@ def main():
         insertions_df = load_insertions_source_as_dataframe(summary)
         minimap2_df = load_minimap2_hits_as_dataframe(mapping_output)
         sequences_in_nucleus_df = load_read_positions_from_maf_into_dataframe(in_fpath / "sd_0001.maf")
-        get_reads_in_insertions(minimap2_df, insertions_df)
+        df = get_reads_from_insertions(insertions_df, sequences_in_nucleus_df)
+        print(df)
 
     # overlaps = classify_minimap_hits(insertions_source, mapping_output)
     # with open(out_path / "results.txt", "w") as results_fhand:
