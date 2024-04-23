@@ -119,7 +119,7 @@ def get_reads_from_insertions(insertions_df, sequences_in_nucleus_df):
 
 def merge_minimap2_and_reference_nuclear(ref_df, minimap2_df):
     merge = ref_df.merge(minimap2_df, how="outer")
-    print(merge)
+    merge.to_csv("check.tsv", index=False)
     pass
 
 
