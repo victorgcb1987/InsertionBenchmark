@@ -99,8 +99,9 @@ def get_reads_in_insertions(minimap2_df, insertions_df):
 
 def get_reads_from_insertions(insertions_df, sequences_in_nucleus_df):
     dict_to_dataframe = {"readName": [], "insertionStart": [],
-                         "insertionEnd": [], "organellerStart": [],
-                         "organelleEnd": [], "strand": []}
+                         "insertionEnd": [], "organelleStart": [],
+                         "organelleEnd": [], "strand": [],
+                         "mappingStart": [], "mappingEnd": []}
     for row in insertions_df.itertuples():
         reads = sequences_in_nucleus_df.loc[~((row.nuclearEnd <= sequences_in_nucleus_df["nuclearStart"]) | (sequences_in_nucleus_df["nuclearEnd"] <= row.nuclearStart))]
         if not reads.empty:
