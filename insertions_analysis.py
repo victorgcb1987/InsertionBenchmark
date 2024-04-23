@@ -105,6 +105,7 @@ def get_reads_from_insertions(insertions_df, sequences_in_nucleus_df):
         reads = sequences_in_nucleus_df.loc[~((row.nuclearEnd <= sequences_in_nucleus_df["nuclearStart"]) | (sequences_in_nucleus_df["nuclearEnd"] <= row.nuclearStart))]
         if not reads.empty:
             for read in reads:
+                print(read)
                 dict_to_dataframe["readName"].append(read.readName)
                 dict_to_dataframe["organelleStart"].append(row.organelleStart)
                 dict_to_dataframe["organelleEnd"].append(row.organelleEnd)
