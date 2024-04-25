@@ -125,9 +125,9 @@ def merge_minimap2_and_reference_nuclear(ref_df, minimap2_df):
 
 
 def get_mapping_stats(merged_df):
-    reads_from_simulation_and_insertion = merged_df.loc[~(merged_df["organelleStart_x"].isnull())]
-    reads_from_insertion_not_mapped =  merged_df.loc[(~(merged_df["organelleStart_x"].isnull()) & merged_df["organelleStart_y"].isnull())]
-    reads_mapped_not_from_insertion = merged_df.loc[(merged_df["organelleStart_x"].isnull() & ~(merged_df["organelleStart_y"].isnull()))]
+    reads_from_simulation_and_insertion = merged_df.loc[~(merged_df["organelleStart_x"].isnull())].groupby("readName")
+    reads_from_insertion_not_mapped =  merged_df.loc[(~(merged_df["organelleStart_x"].isnull()) & merged_df["organelleStart_y"].isnull())].groupby("readName")
+    reads_mapped_not_from_insertion = merged_df.loc[(merged_df["organelleStart_x"].isnull() & ~(merged_df["organelleStart_y"].isnull()))].groupby("readName")
     print(len(reads_from_simulation_and_insertion), len(reads_from_insertion_not_mapped), len(reads_mapped_not_from_insertion))
 
 def main():
