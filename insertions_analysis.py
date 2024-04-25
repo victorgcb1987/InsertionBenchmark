@@ -121,8 +121,14 @@ def merge_minimap2_and_reference_nuclear(ref_df, minimap2_df):
     merge = ref_df.merge(minimap2_df, how="outer", on="readName")
     filtered_merge = merge.loc[~((merge["organelleEnd_y"] <= merge["organelleStart_x"]) | (merge["organelleEnd_x"] <= merge["organelleStart_y"]))]
     filtered_merge.to_csv("check2.tsv", sep="\t", index=False, na_rep='NULL')
-    pass
+    return filtered_merge
 
+
+def get_mapping_stats(merged_df):
+    reads_from_simulation_and_insertion = merged_df.loc[~(merged_df["organelleStart_x"].isnull())]
+    reads_from_insertion_not_mapped =  merged_df.loc[(~(merged_df["organelleStart_x"].isnull()) & merged_df["organelleStart_y"].isnull())]
+    reads_mapped_not_from_insertion = merged_df.loc[(merged_df["organelleStart_x"].isnull() & ~(merged_df["organelleStart_y"].isnull()))]
+    print(len(reads_from_simulation_and_insertion), len(reads_from_insertion_not_mapped), len(reads_mapped_not_from_insertion))
 
 def main():
     arguments = get_arguments()
@@ -141,6 +147,8 @@ def main():
         sequences_in_nucleus_df = load_read_positions_from_maf_into_dataframe(in_fpath / "sd_0001.maf")
         ref_df = get_reads_from_insertions(insertions_df, sequences_in_nucleus_df)
         merged_df = merge_minimap2_and_reference_nuclear(ref_df, minimap2_df)
+        mapping_stats = get_mapping_stats(merged_df)
+
     # overlaps = classify_minimap_hits(insertions_source, mapping_output)
     # with open(out_path / "results.txt", "w") as results_fhand:
     #     results_fhand.write("Insertion\tNumOverlaps\n")
