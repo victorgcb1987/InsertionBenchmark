@@ -125,11 +125,13 @@ def merge_minimap2_and_reference_nuclear(ref_df, minimap2_df):
 
 
 def get_mapping_stats(merged_df):
-    reads_from_simulation_and_insertion = merged_df.loc[~(merged_df["organelleStart_x"].isnull())].groupby("readName")
-    reads_from_insertion_not_mapped =  merged_df.loc[(~(merged_df["organelleStart_x"].isnull()) & merged_df["organelleStart_y"].isnull())].groupby("readName")
-    reads_mapped_not_from_insertion = merged_df.loc[(merged_df["organelleStart_x"].isnull() & ~(merged_df["organelleStart_y"].isnull()))].groupby("readName")
+    reads_from_simulation_and_insertion = merged_df.loc[~(merged_df["organelleStart_x"].isnull())]
+    reads_from_insertion_not_mapped =  merged_df.loc[(~(merged_df["organelleStart_x"].isnull()) & merged_df["organelleStart_y"].isnull())]
+    reads_mapped_not_from_insertion = merged_df.loc[(merged_df["organelleStart_x"].isnull() & ~(merged_df["organelleStart_y"].isnull()))]
     print(len(reads_from_simulation_and_insertion), len(reads_from_insertion_not_mapped), len(reads_mapped_not_from_insertion))
-
+    reads_from_simulation_and_insertion.to_csv("reads_from_simulation_and_insertion.tsv", sep="\t", index=False, na_rep='NULL')
+    reads_from_insertion_not_mapped.to_csv("reads_from_insertion_not_mapped.tsv", sep="\t", index=False, na_rep='NULL')
+    reads_mapped_not_from_insertion.to_csv("reads_mapped_not_from_insertion.tsv", sep="\t", index=False, na_rep='NULL')
 def main():
     arguments = get_arguments()
     genome_fpath = arguments["ref_genome"]
