@@ -30,6 +30,7 @@ def insert_into_nucleus(nuclear_fhand, sequences, nuclear_positions,out_fpath):
         start = nuclear_positions[index]
         nucls = nucls[:start] + sequence + nucls[start:]
         insertions.append((start, name, len(sequence)))
+        index += 1
     nucls = wrap("".join(nucls), 80)
     with open(out_fpath / "Nuclear_with_insertions.fasta", "w") as out_fhand:
         out_fhand.write(">Nuclear_with_insertions\n")
