@@ -132,6 +132,8 @@ def get_mapping_stats(merged_df):
     reads_from_simulation_and_insertion.to_csv("reads_from_simulation_and_insertion.tsv", sep="\t", index=False, na_rep='NULL')
     reads_from_insertion_not_mapped.to_csv("reads_from_insertion_not_mapped.tsv", sep="\t", index=False, na_rep='NULL')
     reads_mapped_not_from_insertion.to_csv("reads_mapped_not_from_insertion.tsv", sep="\t", index=False, na_rep='NULL')
+
+
 def main():
     arguments = get_arguments()
     genome_fpath = arguments["ref_genome"]
@@ -148,14 +150,9 @@ def main():
         minimap2_df = load_minimap2_hits_as_dataframe(mapping_output)
         sequences_in_nucleus_df = load_read_positions_from_maf_into_dataframe(in_fpath / "sd_0001.maf")
         ref_df = get_reads_from_insertions(insertions_df, sequences_in_nucleus_df)
+        print(len(ref_df.groupby(by="readName")))
         merged_df = merge_minimap2_and_reference_nuclear(ref_df, minimap2_df)
         mapping_stats = get_mapping_stats(merged_df)
-
-    # overlaps = classify_minimap_hits(insertions_source, mapping_output)
-    # with open(out_path / "results.txt", "w") as results_fhand:
-    #     results_fhand.write("Insertion\tNumOverlaps\n")
-    #     for insertion, reads in overlaps.items():
-    #         results_fhand.write(insertion+"\t"+str(len(reads))+"\n")
 
     
 if __name__ == "__main__":
