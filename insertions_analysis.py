@@ -21,9 +21,6 @@ IDENTITIES = [(0.41, 0.5), (0.51, 0.60),
               (0.61, 0.7), (0.71, 0.8),
               (0.81, 0.9), (0.91, 1)]
 
-IDENTITIES = [(0.91, 1)]
-
-
 
 #Generating program options
 def parse_arguments():
@@ -86,8 +83,5 @@ def main():
         print("Total reads from insertions, not mapped {}".format(len(reads["reads_from_insertions_not_mapped"].groupby(by="readName"))))
         print("Total reads mapped, not from insertions {}".format(len(reads["reads_not_from_insertions_mapped_in_organelle"].groupby(by="readName"))))
 
-
-
-    
 if __name__ == "__main__":
     main()
