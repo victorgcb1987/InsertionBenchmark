@@ -2,14 +2,16 @@
 def get_mapping_stats(merged_df):
     reads_from_simulation_and_insertion = merged_df.loc[~(merged_df["organelleStart_x"].isnull())]
     reads_mapped = merged_df.loc[~(merged_df["organelleStart_x"].isnull()) & ~(merged_df["organelleStart_y"].isnull())]
-    reads_from_insertion_not_mapped =  merged_df.loc[~(merged_df["organelleStart_x"].isnull()) & merged_df["organelleStart_y"].isnull()]
-    reads_mapped_not_from_insertion = merged_df.loc[(merged_df["organelleStart_x"].isnull() & ~(merged_df["organelleStart_y"].isnull()))]
+    reads_different_from_mapped = merged_df.loc[~(merged_df["readName"].isin(reads_mapped["readName"]))]
+    reads_different_from_mapped.to_csv("check4.tsv", sep="\t", index=False)
+    reads_from_insertion_not_mapped =  reads_different_from_mapped.loc[~(reads_different_from_mapped["organelleStart_x"].isnull()) & reads_different_from_mapped["organelleStart_y"].isnull()]
+    reads_mapped_not_from_insertion = reads_different_from_mapped.loc[(reads_different_from_mapped["organelleStart_x"].isnull() & ~(reads_different_from_mapped["organelleStart_y"].isnull()))]
     reads_from_simulation_and_insertion.to_csv("reads_from_simulation_and_insertion.tsv", sep="\t", index=False, na_rep='NULL')
     reads_mapped.to_csv("reads_mapped.tsv", sep="\t", index=False, na_rep="NULL")
     reads_from_insertion_not_mapped.to_csv("reads_from_insertion_not_mapped.tsv", sep="\t", index=False, na_rep='NULL')
     reads_mapped_not_from_insertion.to_csv("reads_mapped_not_from_insertion.tsv", sep="\t", index=False, na_rep='NULL')
     return ({"reads_from_insertions": reads_from_simulation_and_insertion,
-            "reads_mapped": reads_mapped,
+            "reads_mapped_from_insertions": reads_mapped,
             "reads_from_insertions_not_mapped": reads_from_insertion_not_mapped,
             "reads_not_from_insertions_mapped_in_organelle": reads_mapped_not_from_insertion})
 

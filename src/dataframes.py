@@ -1,24 +1,58 @@
 import pandas as pd
 
 
-def load_minimap2_hits_as_dataframe(minimap_hits):
+def load_minimap2_hits_as_dataframe(minimap_hits, repetitive_regions=()):
     dict_to_dataframe = {"readName": [], "readLength": [],
                          "readStart": [], "readEnd": [],
                          "strand": [], 
                          "organelleStart": [], "organelleEnd": [],
-                         "numMatches": [], "alnLength": []}
+                         "numMatches": [], "alnLength": [],
+                         "IR": []}
+    strand_conversion = {"+": "-", "-": "+"}
     with open(minimap_hits) as minimap_fhand:
         for line in minimap_fhand:
+            repetitive = False
             line = line.split()
-            dict_to_dataframe["readName"].append(line[0])
-            dict_to_dataframe["readLength"].append(int(line[1]))
-            dict_to_dataframe["readStart"].append(int(line[2]))
-            dict_to_dataframe["readEnd"].append(int(line[3]))
-            dict_to_dataframe["strand"].append(line[4])
-            dict_to_dataframe["organelleStart"].append(int(line[7]))
-            dict_to_dataframe["organelleEnd"].append(int(line[8]))
-            dict_to_dataframe["numMatches"].append(int(line[9]))
-            dict_to_dataframe["alnLength"].append(int(line[10]))
+            read_name = line[0]
+            read_length = int(line[1])
+            read_start = int(line[2])
+            read_end = int(line[3])
+            strand = line[4]
+            organelle_start = int(line[7])
+            organelle_end = int(line[8])
+            num_matches = int(line[9])
+            aln_length = int(line[10])
+            
+            if organelle_start >= repetitive_regions[0][0] and organelle_end <= repetitive_regions[0][1]:
+                rev_organelle_start = repetitive_regions[1][0] + (repetitive_regions[0][1] - organelle_end)
+                rev_organelle_end = repetitive_regions[1][1] - (organelle_start - repetitive_regions[0][0])
+                repetitive = True
+            elif organelle_start >= repetitive_regions[1][0] and organelle_end <= repetitive_regions[1][1]:
+                rev_organelle_start = repetitive_regions[0][0] + (repetitive_regions[1][1] - organelle_end)
+                rev_organelle_end = repetitive_regions[0][1] - (organelle_start -  repetitive_regions[1][0])
+                repetitive = True
+            if repetitive:
+                dict_to_dataframe["readName"].append(read_name)
+                dict_to_dataframe["readLength"].append(read_length)
+                dict_to_dataframe["readStart"].append(read_start)
+                dict_to_dataframe["readEnd"].append(read_end)
+                dict_to_dataframe["strand"].append(strand_conversion[strand])
+                dict_to_dataframe["organelleStart"].append(rev_organelle_start)
+                dict_to_dataframe["organelleEnd"].append(rev_organelle_end)
+                dict_to_dataframe["numMatches"].append(num_matches)
+                dict_to_dataframe["alnLength"].append(aln_length)
+                dict_to_dataframe["IR"].append(repetitive)
+            
+            dict_to_dataframe["readName"].append(read_name)
+            dict_to_dataframe["readLength"].append(read_length)
+            dict_to_dataframe["readStart"].append(read_start)
+            dict_to_dataframe["readEnd"].append(read_end)
+            dict_to_dataframe["strand"].append(strand)
+            dict_to_dataframe["organelleStart"].append(organelle_start)
+            dict_to_dataframe["organelleEnd"].append(organelle_end)
+            dict_to_dataframe["numMatches"].append(num_matches)
+            dict_to_dataframe["alnLength"].append(aln_length)
+            dict_to_dataframe["IR"].append(repetitive)
     return pd.DataFrame.from_dict(dict_to_dataframe)
 
 
