@@ -22,4 +22,8 @@ def run_pbsim(strategy="wgs", depth=100, min_length=1000, max_length=30000,
         cmd.append("--genome {}".format(str(reference)))
     else:
         raise RuntimeError(("Sequence file not found: {}".format(str(reference))))
-    run(" ".join(cmd), shell=True, capture_output=True)
+    run(" ".join(cmd), shell=True)
+    run("gzip -c sd_0001.fastq > sd_0001.fastq.gz", shell=True)
+    run("rm sd_0001.fastq", shell=True)
+    run("gzip -c sd_0001.maf > sd_0001.maf.gz", shell=True)
+    run("rm sd_0001.maf", shell=True)
