@@ -12,7 +12,7 @@ from src.pbsim import run_pbsim
 IDENTITIES = [(0.41, 0.5), (0.51, 0.60), 
               (0.61, 0.7), (0.71, 0.8),
               (0.81, 0.9), (0.91, 1)]
-IDENTITIES = [(0.91, 1)]
+
 
 #Generating program options
 def parse_arguments():
