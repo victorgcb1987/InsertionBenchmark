@@ -61,7 +61,7 @@ def load_minimap2_hits_as_dataframe(minimap_hits, repetitive_regions=()):
 def load_read_positions_from_maf_into_dataframe(maf_file):
     dict_to_dataframe = {"readName": [], "nuclearStart": [],
                          "nuclearEnd": [], "strand": []}
-    with gzip.open(maf_file, "r") as maf_fhand:
+    with gzip.open(maf_file, "rt") as maf_fhand:
         for line in maf_fhand:
             if "ref" in line:
                 nuclear_positions = (int(line.split()[2]), int(line.split()[2])+int(line.split()[3]))
