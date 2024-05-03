@@ -65,7 +65,7 @@ def main():
         in_fname = "{}_{}".format(identity[0], identity[1])
         in_fpath = root_dir / in_fname
         summary = in_fpath / "summary.txt"
-        sequences_fpath = str(in_fpath / "sd_0001.fastq")
+        sequences_fpath = str(in_fpath / "sd_0001.fastq.gz")
         mapping_output = str(in_fpath / "reads_mapped_against_organelle.paf")
         if not arguments["skip_mapping"]:
            run_minimap2(genome_fpath, sequences_fpath, mapping_output)
@@ -73,7 +73,7 @@ def main():
         insertions_df.to_csv("check.tsv", sep="\t")
         minimap2_df = load_minimap2_hits_as_dataframe(mapping_output, repetitive_regions=test_ir)
         minimap2_df.to_csv("minimap2.tsv", sep="\t", index=False)
-        sequences_in_nucleus_df = load_read_positions_from_maf_into_dataframe(in_fpath / "sd_0001.maf")
+        sequences_in_nucleus_df = load_read_positions_from_maf_into_dataframe(in_fpath / "sd_0001.maf.gz")
         ref_df = get_reads_from_insertions(insertions_df, sequences_in_nucleus_df)
         ref_df.to_csv("check3.tsv", index=False, sep="\t")
         merged_df = merge_minimap2_and_reference_nuclear(ref_df, minimap2_df)
