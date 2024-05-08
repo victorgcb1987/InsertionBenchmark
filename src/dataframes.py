@@ -116,7 +116,6 @@ def merge_minimap2_and_reference_nuclear(ref_df, minimap2_df):
     merge = ref_df.merge(minimap2_df, how="outer", on="readName")
     filtered_merge = merge.loc[~((merge["organelleEnd_y"] <= merge["organelleStart_x"]) | (merge["organelleEnd_x"] <= merge["organelleStart_y"]))]
     filtered_merge.to_csv("check2.tsv", sep="\t", index=False, na_rep='NULL')
-    print(filtered_merge)
     return filtered_merge
 
 
@@ -138,3 +137,11 @@ def get_reads_from_insertions(insertions_df, sequences_in_nucleus_df):
                 dict_to_dataframe["refMappingEnd"].append(read.nuclearEnd)
                 dict_to_dataframe["strand"].append(read.strand)
     return pd.DataFrame.from_dict(dict_to_dataframe).sort_values("pointOfInsertionStart")
+
+def filter_by_readname(dataframe_to_filter,  readnames, mode="exclude"):
+    if mode == "exclude":
+        filtered_dataframe = dataframe_to_filter.loc[~dataframe_to_filter["readName"].isin(readnames)]
+    elif mode == "include":
+        filtered_dataframe = dataframe_to_filter.loc[dataframe_to_filter["readName"].isin(readnames)]
+    return filtered_dataframe
+
