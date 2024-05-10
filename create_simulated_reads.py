@@ -47,6 +47,10 @@ def parse_arguments():
     parser.add_argument("--model_file", "-f", type=str,
                         help=help_method_model)
     
+    help_sequencing_preset = "(Required) Sequencing preset"
+    parser.add_argument("--sequencing_preset", "-p", type=str,
+                        help=help_sequencing_preset)
+    
     if len(sys.argv)==1:
         parser.print_help()
         exit()
@@ -62,10 +66,12 @@ def get_arguments():
     min_length = parser.min_length
     max_length = parser.max_length
     method = parser.method
-    model_file = Path(parser.model_file)   
+    model_file = Path(parser.model_file)
+    sequencing_preset = parser.sequencing_preset   
     return {"input_dir": input_dir, "strategy": strategy,
             "sequencing_depth": sequencing_depth, "min_length": min_length, 
-            "max_length": max_length, "method": method, "model_file": model_file}
+            "max_length": max_length, "method": method, "model_file": model_file,
+            "sequencing_preset": sequencing_preset}
 
 
 def main():
@@ -80,11 +86,9 @@ def main():
         reference = root_dir / "Nuclear_with_insertions.fasta"
         run_pbsim(strategy=arguments["strategy"], depth=arguments["sequencing_depth"], 
                    min_length=arguments["min_length"], max_length=arguments["max_length"],
-                   method=arguments["method"], method_model=arguments["model_file"], reference=reference.resolve())
+                   method=arguments["method"], method_model=arguments["model_file"], reference=reference.resolve(),
+                   sequencing_preset=arguments["sequencing_preset"])
         os.chdir(cwd)
-
-
-        
 
 if __name__ == "__main__":
     main()

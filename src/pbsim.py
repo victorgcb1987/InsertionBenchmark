@@ -2,7 +2,7 @@ from subprocess import run
 
 
 def run_pbsim(strategy="wgs", depth=100, min_length=1000, max_length=30000,
-              method="errhmm", method_model=None, reference=None):
+              method="errhmm", method_model=None, reference=None, sequencing_preset="ccs"):
     cmd = ["pbsim"]
     if strategy in ["wgs"]:
         cmd.append("--strategy {}".format(strategy))
@@ -22,8 +22,19 @@ def run_pbsim(strategy="wgs", depth=100, min_length=1000, max_length=30000,
         cmd.append("--genome {}".format(str(reference)))
     else:
         raise RuntimeError(("Sequence file not found: {}".format(str(reference))))
-    run(" ".join(cmd), shell=True)
-    run("gzip -c sd_0001.fastq > sd_0001.fastq.gz", shell=True)
-    run("rm sd_0001.fastq", shell=True)
-    run("gzip -c sd_0001.maf > sd_0001.maf.gz", shell=True)
-    run("rm sd_0001.maf", shell=True)
+    if sequencing_preset != "ccs":
+        prefix = "sd"
+        run(" ".join(cmd), shell=True)
+    else:
+        prefix = "ccs"
+        cmd.append("--prefix ccs --pass-num 10  --seed 100")
+        run(" ".join(cmd), shell=True)
+        run("samtools view -bS -@ 40 ccs_0001.sam > ccs_0001.bam", shell=True)
+        run("ccs all -j 40 ccs_0001.bam ccs_0001.fastq", shell=True)
+    run("gzip -c {}_0001.fastq > {}_0001.fastq.gz".format(prefix, prefix), shell=True)
+    run("rm {}_0001.fastq".format(prefix), shell=True)
+    run("gzip -c {}_0001.maf > {}_0001.maf.gz".prefix, shell=True)
+    run("rm {}_0001.maf".format(prefix), shell=True)
+
+
+    #~/soft/pbsim3/src/pbsim --strategy wgs --depth 100  --length-min 10000  --length-max 30000 --method qshmm --qshmm ~/soft/pbsim3/data/QSHMM-RSII.model --depth 100 --prefix ccs --pass-num 10  --seed 100  --genome  Nuclear_with_insertions.fasta
