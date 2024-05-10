@@ -10,9 +10,7 @@ from pathlib import Path
 from src.dataframes import (load_insertions_source_as_dataframe, 
                                  load_minimap2_hits_as_dataframe, 
                                  load_read_positions_from_maf_into_dataframe,
-                                 get_reads_from_insertions,
-                                 merge_minimap2_and_reference_nuclear,
-                                 filter_by_readname)
+                                 get_reads_from_insertions)
 from src.minimap2 import run_minimap2
 
 from src.stats import get_mapping_stats
@@ -21,6 +19,7 @@ from src.stats import get_mapping_stats
 IDENTITIES = [(0.41, 0.5), (0.51, 0.60), 
               (0.61, 0.7), (0.71, 0.8),
               (0.81, 0.9), (0.91, 1)]
+
 
 
 #Generating program options

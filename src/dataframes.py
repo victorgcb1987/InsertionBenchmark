@@ -61,12 +61,23 @@ def load_minimap2_hits_as_dataframe(minimap_hits, repetitive_regions=()):
 def load_read_positions_from_maf_into_dataframe(maf_file):
     dict_to_dataframe = {"readName": [], "nuclearStart": [],
                          "nuclearEnd": [], "strand": []}
+    readnames = []
     with gzip.open(maf_file, "rt") as maf_fhand:
         for line in maf_fhand:
             if "ref" in line:
                 nuclear_positions = (int(line.split()[2]), int(line.split()[2])+int(line.split()[3]))
             elif line.startswith("s"):
                 readname = line.split()[1]
+                #all reads from CCS originates from the same point
+                #running ccs creates a unique read, we are going to
+                #modify the readname to group all the reads into a single one
+                check = readname.split("/")
+                if len(check) == 3:
+                    readname = "/".join(readname.split("/")[:-1]+"/ccs")
+                    if readname in readnames:
+                        continue
+                    else:
+                        readnames.append(readname)
                 strand = line.split()[4]
                 dict_to_dataframe["readName"].append(readname)
                 dict_to_dataframe["nuclearStart"].append(nuclear_positions[0])
