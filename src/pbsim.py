@@ -33,7 +33,7 @@ def run_pbsim(strategy="wgs", depth=100, min_length=1000, max_length=30000,
         run("ccs all -j 40 ccs_0001.bam ccs_0001.fastq", shell=True)
     run("gzip -c {}_0001.fastq > {}_0001.fastq.gz".format(prefix, prefix), shell=True)
     run("rm {}_0001.fastq".format(prefix), shell=True)
-    run("gzip -c {}_0001.maf > {}_0001.maf.gz".format(prefix), shell=True)
+    run("gzip -c {}_0001.maf > {}_0001.maf.gz".format(prefix, prefix), shell=True)
     run("rm {}_0001.maf".format(prefix), shell=True)
 
 
