@@ -73,7 +73,7 @@ def load_read_positions_from_maf_into_dataframe(maf_file):
                 #modify the readname to group all the reads into a single one
                 check = readname.split("/")
                 if len(check) == 3:
-                    readname = "/".join(readname.split("/")[:-1]+"/ccs")
+                    readname = "/".join(readname.split("/")[:-1])+"/ccs"
                     if readname in readnames:
                         continue
                     else:
