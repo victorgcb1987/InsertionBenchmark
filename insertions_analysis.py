@@ -39,6 +39,10 @@ def parse_arguments():
     parser.add_argument("--skip_mapping", "-s", action="store_true",
                         help=help_skip_mapping)
     
+    help_sequencing_preset = "(Required) prefix for files to analize (ccs, sd)"
+    parser.add_argument("--prefix", "-p",
+                        help=help_sequencing_preset)
+    
     if len(sys.argv)==1:
         parser.print_help()
         exit()
@@ -51,9 +55,11 @@ def get_arguments():
     input_dir = Path(parser.input_dir)
     ref_genome = Path(parser.organelle_ref)
     skip_mapping = parser.skip_mapping
+    prefix = parser.prefix
     return {"input_dir": input_dir, 
             "ref_genome": ref_genome,
-            "skip_mapping": skip_mapping}
+            "skip_mapping": skip_mapping,
+            "prefix": prefix}
 
 
 def main():
@@ -69,7 +75,7 @@ def main():
         in_fname = "{}_{}".format(identity[0], identity[1])
         in_fpath = root_dir / in_fname
         summary = in_fpath / "summary.txt"
-        sequences_fpath = str(in_fpath / "sd_0001.fastq.gz")
+        sequences_fpath = str(in_fpath / "{}_0001.fastq.gz".format(arguments["prefix"]))
         mapping_output = str(in_fpath / "reads_mapped_against_organelle.paf")
         if not arguments["skip_mapping"]:
            run_minimap2(genome_fpath, sequences_fpath, mapping_output)
@@ -77,7 +83,7 @@ def main():
         insertions_df.to_csv("check.tsv", sep="\t")
         minimap2_df = load_minimap2_hits_as_dataframe(mapping_output, repetitive_regions=test_ir)
         minimap2_df.to_csv("minimap2.tsv", sep="\t", index=False)
-        sequences_in_nucleus_df = load_read_positions_from_maf_into_dataframe(in_fpath / "sd_0001.maf.gz")
+        sequences_in_nucleus_df = load_read_positions_from_maf_into_dataframe(in_fpath / "{}_0001.maf.gz".format(arguments["prefix"]))
         total_sequences = set(sequences_in_nucleus_df['readName'].tolist())
         reads_from_insertions_df = get_reads_from_insertions(insertions_df, sequences_in_nucleus_df)
         from_insertions_readnames = set(reads_from_insertions_df['readName'].tolist())
