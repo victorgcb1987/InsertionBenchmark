@@ -63,8 +63,8 @@ def get_sequences(input_fhand, insertion_positions, freq1, freq2, length, out_pa
     return subseqs
 
 
-def get_random_sequence_positions(input_sequence, num_insertions=100):
+def get_random_sequence_positions(input_sequence, insertion_length, num_insertions=100):
     record = SeqIO.read(input_sequence, "fasta")
-    sequence_positions = list(range(0, len(record.seq)))
+    sequence_positions = list(range(0, len(record.seq)-insertion_length))
     insertion_positions = random.sample(sequence_positions, num_insertions)
     return insertion_positions

@@ -20,6 +20,7 @@ IDENTITIES = [(0.41, 0.5), (0.51, 0.60),
               (0.61, 0.7), (0.71, 0.8),
               (0.81, 0.9), (0.91, 1)]
 
+IDENTITIES = [(0.91, 1)]
 
 
 #Generating program options
@@ -82,15 +83,18 @@ def main():
         insertions_df = load_insertions_source_as_dataframe(summary, repetitive_regions=test_ir)
         insertions_df.to_csv("check.tsv", sep="\t")
         minimap2_df = load_minimap2_hits_as_dataframe(mapping_output, repetitive_regions=test_ir)
+        #print(minimap2_df)
         minimap2_df.to_csv("minimap2.tsv", sep="\t", index=False)
         sequences_in_nucleus_df = load_read_positions_from_maf_into_dataframe(in_fpath / "{}_0001.maf.gz".format(arguments["prefix"]))
         total_sequences = set(sequences_in_nucleus_df['readName'].tolist())
         reads_from_insertions_df = get_reads_from_insertions(insertions_df, sequences_in_nucleus_df)
+        #print(reads_from_insertions_df)
         from_insertions_readnames = set(reads_from_insertions_df['readName'].tolist())
+        #print(len(from_insertions_readnames))
         #reads_not_from_insertions_df = filter_by_readname(reads_from_insertions_df, from_insertions_readnames, mode="exclude")
         not_from_insertions_readnames = total_sequences - from_insertions_readnames
         mapped_reads = set(minimap2_df['readName'].tolist())
-        mapped_reads_from_insertions = mapped_reads - not_from_insertions_readnames
+        mapped_reads_from_insertions = mapped_reads -  not_from_insertions_readnames
         mapped_reads_not_from_insertions = mapped_reads - from_insertions_readnames
         results_dict["identity"].append(identity)
         results_dict["total_reads"].append(len(total_sequences))

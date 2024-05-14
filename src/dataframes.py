@@ -121,7 +121,7 @@ def load_insertions_source_as_dataframe(summary, repetitive_regions=()):
             dict_to_dataframe["organelleEnd"].append(organelle_end)
             dict_to_dataframe["IR"].append(repetitive)
 
-    return pd.DataFrame.from_dict(dict_to_dataframe).sort_values("nuclearStart")
+    return pd.DataFrame.from_dict(dict_to_dataframe)
 
 def merge_minimap2_and_reference_nuclear(ref_df, minimap2_df):
     merge = ref_df.merge(minimap2_df, how="outer", on="readName")
@@ -147,7 +147,7 @@ def get_reads_from_insertions(insertions_df, sequences_in_nucleus_df):
                 dict_to_dataframe["refMappingStart"].append(read.nuclearStart)
                 dict_to_dataframe["refMappingEnd"].append(read.nuclearEnd)
                 dict_to_dataframe["strand"].append(read.strand)
-    return pd.DataFrame.from_dict(dict_to_dataframe).sort_values("pointOfInsertionStart")
+    return pd.DataFrame.from_dict(dict_to_dataframe)
 
 def filter_by_readname(dataframe_to_filter,  readnames, mode="exclude"):
     if mode == "exclude":
