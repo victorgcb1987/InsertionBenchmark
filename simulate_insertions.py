@@ -61,7 +61,7 @@ def get_arguments():
 
 def main():
     arguments = get_arguments()
-    nuclear_positions = get_random_sequence_positions(arguments["destiny"])
+    nuclear_positions = get_random_sequence_positions(arguments["destiny"], arguments["insertion_length"])
     insertion_positions = get_random_sequence_positions(arguments["input_sequence"], arguments["insertion_length"])
     for indentity_range in IDENTITIES:
         freq1 = indentity_range[0]
