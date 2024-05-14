@@ -92,6 +92,7 @@ def main():
         mapped_reads = set(minimap2_df['readName'].tolist())
         mapped_reads_from_insertions = mapped_reads.intersection(from_insertions_readnames)
         mapped_reads_not_from_insertions = mapped_reads.intersection(not_from_insertions_readnames)
+        print(from_insertions_readnames.intersection(not_from_insertions_readnames))
         results_dict["identity"].append(identity)
         results_dict["total_reads"].append(len(total_sequences))
         results_dict["reads_from_insertions"].append(len(from_insertions_readnames))
